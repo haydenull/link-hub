@@ -17,10 +17,12 @@
     ]
   },
   "dependencies": {
+    "@notionhq/client": "^2.2.15",
     "@tanstack/react-query": "^5.50.1",
     "@tanstack/react-query-next-experimental": "^5.50.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "drizzle-orm": "^0.32.0",
     "lucide-react": "^0.400.0",
     "next": "14.2.4",
     "react": "^18",
@@ -34,6 +36,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "drizzle-kit": "^0.23.0",
     "eslint": "^8",
     "eslint-config-next": "14.2.4",
     "husky": "^9.0.11",
