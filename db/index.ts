@@ -5,7 +5,7 @@ import * as schema from '@/db/schema'
 
 export const runtime = 'edge'
 
-function initDbConnection() {
+export function initDbConnection() {
   if (process.env.NODE_ENV === 'development') {
     const { env: requestEnv } = getRequestContext()
 
