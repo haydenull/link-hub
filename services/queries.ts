@@ -1,5 +1,5 @@
-import type { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints'
-
+import { db } from '@/db'
+import { links } from '@/db/schema'
 import { convertNotionPageToLink } from '@/lib/notion'
 import type { Page } from '@/types/notion'
 
@@ -10,7 +10,7 @@ import { notionApi } from './notionApi'
  */
 export const getLinkList = async () => {
   const { results } = await notionApi.databases.query({
-    database_id: process.env.NOTION_DATABASE_ID,
+    database_id: process.env.NOTION_DATABASE_ID!,
     // sorts: [
     //   {
     //     property: 'Date',
@@ -19,4 +19,9 @@ export const getLinkList = async () => {
     // ],
   })
   return (results as Page[]).map(convertNotionPageToLink)
+}
+export const getLinkListFromDrizzle = async () => {
+  const res = await db.select().from(links)
+  console.log('res', res)
+  return res
 }

@@ -3,12 +3,22 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "prepare": "husky",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate:local": "wrangler d1 migrations apply link-hub --local",
+    "db:migrate:pre": "wrangler d1 migrations apply --env preview link-hub-pre",
+    "db:migrate:prod": "wrangler d1 migrations apply link-hub --remote",
+    "db:studio:local": "cross-env DB_LOCAL_PATH=$(find .wrangler/state/v3/d1/miniflare-D1DatabaseObject -type f -name '*.sqlite' -print -quit) drizzle-kit studio",
+    "db:studio:pre": "cross-env NODE_ENV='pre' drizzle-kit studio",
+    "db:studio:prod": "drizzle-kit studio",
+    "pages:build": "pnpm next-on-pages",
+    "dev": "next dev",
+    "build": "next build",
+    "pages:dev": "pnpm pages:build && pnpm wrangler pages dev",
+    "pages:deploy": "pnpm pages:build && pnpm wrangler pages deploy"
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": [
@@ -28,14 +38,21 @@
     "react": "^18",
     "react-dom": "^18",
     "tailwind-merge": "^2.3.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@cloudflare/next-on-pages": "^1.12.1",
+    "@cloudflare/workers-types": "^4.20240712.0",
     "@haydenull/fabric": "^0.2.6",
+    "@next/env": "^14.2.5",
+    "@t3-oss/env-nextjs": "^0.10.1",
     "@tanstack/react-query-devtools": "^5.50.1",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "better-sqlite3": "^11.1.2",
+    "cross-env": "^7.0.3",
     "drizzle-kit": "^0.23.0",
     "eslint": "^8",
     "eslint-config-next": "14.2.4",
@@ -43,6 +60,7 @@
     "lint-staged": "^15.2.7",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "^3.64.0"
   }
 }

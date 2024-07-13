@@ -1,6 +1,7 @@
-namespace NodeJS {
-  interface ProcessEnv {
-    NOTION_DATABASE_ID: string
-    NOTION_ACCESS_TOKEN: string
+import type { D1Database } from '@cloudflare/workers-types'
+
+declare global {
+  interface CloudflareEnv {
+    DB: D1Database
   }
 }
