@@ -1,3 +1,5 @@
+'use server'
+
 import { eq, inArray } from 'drizzle-orm'
 
 import { db } from '@/db'
@@ -14,7 +16,6 @@ import {
 // MARK: Tag
 /** 获取 Tag 列表 */
 export const getTagList = async () => {
-  'use server'
   const res = await db.select().from(tagsTable)
   return res
 }
@@ -22,7 +23,6 @@ export const getTagList = async () => {
  * 创建 Tag
  */
 export const createTag = async (params: CreateTagParams) => {
-  'use server'
   const res = await db.insert(tagsTable).values(params).returning()
   return res[0]
 }
@@ -32,7 +32,6 @@ export const createTag = async (params: CreateTagParams) => {
  * 获取 link 列表
  */
 export const getLinkList = async (): Promise<Link[]> => {
-  'use server'
   const linkList = await db
     .select({
       id: linksTable.id,
@@ -67,7 +66,6 @@ export const getLinkList = async (): Promise<Link[]> => {
 }
 /** 创建 Link */
 export const createLink = async (params: CreateLinkParams): Promise<Link> => {
-  'use server'
   const link = await db.insert(linksTable).values(params).returning()
   let tags: Tag[] = []
   if (params.tags?.length) {
@@ -84,4 +82,39 @@ export const createLink = async (params: CreateLinkParams): Promise<Link> => {
     ...link[0],
     tags,
   }
+}
+/** 依据 tagId 查询 link */
+export const getLinkListByTagId = async (tagId: number): Promise<Link[]> => {
+  const linkList = await db
+    .select({
+      id: linksTable.id,
+      name: linksTable.name,
+      remark: linksTable.remark,
+      url: linksTable.url,
+      tagId: tagsTable.id,
+      tagName: tagsTable.name,
+    })
+    .from(linksTable)
+    .leftJoin(linksToTagsTable, eq(linksToTagsTable.linkId, linksTable.id))
+    .leftJoin(tagsTable, eq(linksToTagsTable.tagId, tagsTable.id))
+    .where(eq(tagsTable.id, tagId))
+    .execute()
+  const linkMap = new Map()
+  linkList.forEach((link) => {
+    const { id, tagId, tagName, ...rest } = link
+    if (!linkMap.has(id)) {
+      linkMap.set(id, {
+        ...rest,
+        id,
+        tags: [],
+      })
+    }
+    if (tagId) {
+      linkMap.get(id).tags.push({
+        id: tagId,
+        name: tagName,
+      })
+    }
+  })
+  return Array.from(linkMap.values())
 }
