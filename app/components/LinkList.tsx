@@ -3,7 +3,7 @@
 import { useQuery } from '@tanstack/react-query'
 
 import type { Link } from '@/db/schema'
-import { getLinkList } from '@/services/queries'
+import { getLinkList } from '@/services/actions'
 
 import LinkCard from './LinkCard'
 

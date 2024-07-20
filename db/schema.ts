@@ -2,6 +2,8 @@ import { integer, primaryKey, sqliteTable, text } from 'drizzle-orm/sqlite-core'
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
 import { z } from 'zod'
 
+import { removeNullableFromObject } from '@/lib/utils'
+
 // MARK: Tag
 // Tag 表
 export const tagsTable = sqliteTable('tags', {
@@ -26,10 +28,12 @@ export const linksTable = sqliteTable('links', {
 // export type Link = typeof links.$inferSelect
 export const insertLinkSchema = createInsertSchema(linksTable)
 export const selectLinkSchema = createSelectSchema(linksTable)
-export const createLinkSchema = insertLinkSchema.merge(
-  z.object({
-    tags: z.array(z.number()).optional(),
-  }),
+export const createLinkSchema = removeNullableFromObject(
+  insertLinkSchema.merge(
+    z.object({
+      tags: z.array(z.number()).optional(),
+    }),
+  ),
 )
 export type CreateLinkParams = z.infer<typeof createLinkSchema>
 export const linkSchema = selectLinkSchema.merge(z.object({ tags: z.array(selectTagSchema) }))

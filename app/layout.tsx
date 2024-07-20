@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 
+import Header from '@/components/Header'
 import Sidebar from '@/components/Sidebar'
 import { cn } from '@/lib/utils'
 
@@ -21,9 +22,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn(inter.className, 'flex')}>
-        <Sidebar />
-        <Providers>{children}</Providers>
+      <body className={cn(inter.className, 'flex flex-col')}>
+        <Providers>
+          <Header />
+          <div className="flex">
+            <Sidebar />
+            {children}
+          </div>
+        </Providers>
       </body>
     </html>
   )

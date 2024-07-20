@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
 
 import { createTagSchema } from '@/db/schema'
-import { createTag } from '@/services/queries'
+import { createTag } from '@/services/actions'
 
 export const runtime = 'edge'
 

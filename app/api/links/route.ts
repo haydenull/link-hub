@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 import { createLinkSchema } from '@/db/schema'
-import { createLink, getLinkList } from '@/services/queries'
+import { createLink, getLinkList } from '@/services/actions'
 
 export const runtime = 'edge'
 
