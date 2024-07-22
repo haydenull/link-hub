@@ -1,8 +1,9 @@
 'use client'
 
-import { Pencil } from 'lucide-react'
+import { Pencil, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 
+import ConfirmDialog from '@/components/ConfirmDialog'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import type { Link } from '@/db/schema'
 
@@ -17,21 +18,26 @@ const LinkCard = ({ data }: { data: Link }) => {
         <h2 className="mb-2 text-lg font-medium">{name}</h2>
         <p className="text-zinc-500">{remark}</p>
       </a>
-      <Sheet open={open} onOpenChange={setOpen}>
-        <SheetTrigger>
-          <Pencil className="absolute right-1 top-1 size-4" />
-        </SheetTrigger>
-        <SheetContent>
-          <SheetHeader className="mb-8">
-            <SheetTitle>Edit</SheetTitle>
-            <SheetDescription>
-              This action cannot be undone. This will permanently delete your account and remove your data from our
-              servers.
-            </SheetDescription>
-          </SheetHeader>
-          <UpdateLinkForm linkData={data} onSuccess={() => setOpen(false)} />
-        </SheetContent>
-      </Sheet>
+      <div className="absolute right-0 top-0 flex gap-1 rounded-lg border px-2 py-1 text-muted-foreground">
+        <ConfirmDialog title="Are you sure you want to delete this link?" description="This action cannot be undone.">
+          <Trash2 className="size-4 cursor-pointer text-rose-500" />
+        </ConfirmDialog>
+        <Sheet open={open} onOpenChange={setOpen}>
+          <SheetTrigger>
+            <Pencil className="size-4" />
+          </SheetTrigger>
+          <SheetContent>
+            <SheetHeader className="mb-8">
+              <SheetTitle>Edit</SheetTitle>
+              <SheetDescription>
+                This action cannot be undone. This will permanently delete your account and remove your data from our
+                servers.
+              </SheetDescription>
+            </SheetHeader>
+            <UpdateLinkForm linkData={data} onSuccess={() => setOpen(false)} />
+          </SheetContent>
+        </Sheet>
+      </div>
     </div>
   )
 }

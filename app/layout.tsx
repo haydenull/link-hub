@@ -22,12 +22,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn(inter.className, 'flex flex-col')}>
+      <body className={cn(inter.className, 'flex h-screen flex-col')}>
         <Providers>
           <Header />
-          <div className="flex">
+          <div className="flex flex-1">
             <Sidebar />
-            {children}
+            <div className="flex-1 overflow-auto">{children}</div>
           </div>
         </Providers>
       </body>

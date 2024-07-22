@@ -105,7 +105,7 @@ export const CreateLinkForm = ({ onSuccess }: { onSuccess?: () => void }) => {
       })
     },
   })
-  return <SharedTLinkForm form={form} onSubmit={mutate} isSubmitting={isPending} />
+  return <SharedTLinkForm form={form} onSubmit={mutate} isSubmitting={isPending} submitText="Create" />
 }
 
 export const UpdateLinkForm = ({ linkData, onSuccess }: { linkData: Link; onSuccess?: () => void }) => {

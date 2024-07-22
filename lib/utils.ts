@@ -2,6 +2,8 @@ import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { z } from 'zod'
 
+import type { Tag } from '@/db/schema'
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
@@ -29,4 +31,40 @@ export function removeNullableFromObject<T extends z.ZodRawShape>(schema: z.ZodO
   ) as RemoveNullable<T>
 
   return z.object(newShape) as z.ZodObject<RemoveNullable<T>, 'strip', z.ZodTypeAny>
+}
+
+type TreeTag = {
+  id: number
+  name: string
+  fullPath: string
+  children?: TreeTag[]
+}
+/** 将 Tag List 转为 Tag Tree */
+export function convertTagListToTagTree(flatTags: Tag[]) {
+  const root: TreeTag[] = []
+  const map: Record<string, TreeTag> = {}
+
+  flatTags.forEach((tag) => {
+    const parts = tag.name.split('/')
+    parts.reduce((parent, part, index) => {
+      const path = parts.slice(0, index + 1).join('/')
+      if (!map[path]) {
+        const newNode: TreeTag = {
+          id: index === parts.length - 1 ? tag.id : -1,
+          name: part,
+          fullPath: path,
+        }
+        map[path] = newNode
+        if (index === 0) {
+          root.push(newNode)
+        } else {
+          parent.children = parent.children || []
+          parent.children.push(newNode)
+        }
+      }
+      return map[path]
+    }, {} as TreeTag)
+  })
+
+  return root
 }

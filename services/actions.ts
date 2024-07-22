@@ -1,6 +1,6 @@
 'use server'
 
-import { eq, inArray } from 'drizzle-orm'
+import { eq, inArray, notInArray } from 'drizzle-orm'
 
 import { db } from '@/db'
 import {
@@ -37,37 +37,16 @@ export const updateTag = async ({ id, data }: { id: number; data: CreateTagParam
  * 获取 link 列表
  */
 export const getLinkList = async (): Promise<Link[]> => {
-  const linkList = await db
-    .select({
-      id: linksTable.id,
-      name: linksTable.name,
-      remark: linksTable.remark,
-      url: linksTable.url,
-      tagId: tagsTable.id,
-      tagName: tagsTable.name,
-    })
-    .from(linksTable)
-    .leftJoin(linksToTagsTable, eq(linksToTagsTable.linkId, linksTable.id))
-    .leftJoin(tagsTable, eq(linksToTagsTable.tagId, tagsTable.id))
-    .execute()
-  const linkMap = new Map()
-  linkList.forEach((link) => {
-    const { id, tagId, tagName, ...rest } = link
-    if (!linkMap.has(id)) {
-      linkMap.set(id, {
-        ...rest,
-        id,
-        tags: [],
-      })
-    }
-    if (tagId) {
-      linkMap.get(id).tags.push({
-        id: tagId,
-        name: tagName,
-      })
-    }
+  const linkList = await db.query.linksTable.findMany({
+    with: {
+      linksToTags: {
+        with: {
+          tag: true,
+        },
+      },
+    },
   })
-  return Array.from(linkMap.values())
+  return linkList.map(({ linksToTags, ...link }) => ({ ...link, tags: linksToTags.map((linkToTag) => linkToTag.tag) }))
 }
 /** 创建 Link */
 export const createLink = async (params: CreateLinkParams): Promise<Link> => {
@@ -95,36 +74,40 @@ export const updateLink = async ({ id, data }: { id: number; data: CreateLinkPar
 }
 /** 依据 tagId 查询 link */
 export const getLinkListByTagId = async (tagId: number): Promise<Link[]> => {
-  const linkList = await db
-    .select({
-      id: linksTable.id,
-      name: linksTable.name,
-      remark: linksTable.remark,
-      url: linksTable.url,
-      tagId: tagsTable.id,
-      tagName: tagsTable.name,
-    })
-    .from(linksTable)
-    .leftJoin(linksToTagsTable, eq(linksToTagsTable.linkId, linksTable.id))
-    .leftJoin(tagsTable, eq(linksToTagsTable.tagId, tagsTable.id))
-    .where(eq(tagsTable.id, tagId))
-    .execute()
-  const linkMap = new Map()
-  linkList.forEach((link) => {
-    const { id, tagId, tagName, ...rest } = link
-    if (!linkMap.has(id)) {
-      linkMap.set(id, {
-        ...rest,
-        id,
-        tags: [],
-      })
-    }
-    if (tagId) {
-      linkMap.get(id).tags.push({
-        id: tagId,
-        name: tagName,
-      })
-    }
+  const linkIds = await db.query.linksToTagsTable.findMany({
+    where: eq(linksToTagsTable.tagId, tagId),
+    columns: {
+      linkId: true,
+    },
   })
-  return Array.from(linkMap.values())
+  if (!linkIds.length) return []
+  const linkList = await db.query.linksTable.findMany({
+    where: inArray(
+      linksTable.id,
+      linkIds.map((linkToTag) => linkToTag.linkId),
+    ),
+    with: {
+      linksToTags: {
+        with: {
+          tag: true,
+        },
+      },
+    },
+  })
+  return linkList.map(({ linksToTags, ...link }) => ({ ...link, tags: linksToTags.map((linkToTag) => linkToTag.tag) }))
+}
+/** 查询没有 tag 的 link */
+export const getLinkListWithoutTag = async (): Promise<Link[]> => {
+  const linkIds = await db.query.linksToTagsTable.findMany({
+    columns: {
+      linkId: true,
+    },
+  })
+  const linkList = await db.query.linksTable.findMany({
+    where: notInArray(
+      linksTable.id,
+      linkIds.map((link) => link.linkId),
+    ),
+  })
+  return linkList.map((link) => ({ ...link, tags: [] }))
 }
