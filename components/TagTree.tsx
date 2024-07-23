@@ -29,13 +29,13 @@ const TagTree: React.FC<TagTreeProps> = ({ tags }) => {
 
   const renderTree = (nodes: TreeTag[] = []) => {
     return (
-      <ul className="pl-4">
+      <ul className="pl-1">
         {nodes.map((node) => {
           const hasChildren = node.children && node.children.length > 0
 
           return (
-            <li key={node.fullPath} className="my-2">
-              <div className="group/tag-item flex items-center justify-between text-foreground hover:bg-muted-foreground">
+            <li key={node.fullPath}>
+              <div className="group/tag-item flex items-center justify-between rounded-md py-1 text-foreground hover:bg-muted">
                 <div className="flex flex-1">
                   {hasChildren ? (
                     <button onClick={() => toggleExpand(node.fullPath)} className="mr-1 focus:outline-none">

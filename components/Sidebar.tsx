@@ -24,10 +24,10 @@ const Sidebar = () => {
     <div className="w-[240px] overflow-auto border-r">
       {/* MARK: Dashboard */}
       <div className="my-2 flex flex-col">
-        <Link className="px-2 py-1 text-foreground hover:bg-muted-foreground" href="/dashboard">
+        <Link className="px-2 py-1 text-foreground hover:bg-muted" href="/dashboard">
           Dashboard
         </Link>
-        <Link className="px-2 py-1 text-foreground hover:bg-muted-foreground" href="/inbox">
+        <Link className="px-2 py-1 text-foreground hover:bg-muted" href="/inbox">
           Inbox
         </Link>
       </div>
@@ -37,13 +37,6 @@ const Sidebar = () => {
           <span>Tag Tree</span>
           <CreateTagButton />
         </h2>
-        {/* {tagList.map((tag) => (
-          <div key={tag.id} className="group/tag-item flex px-2 py-1 text-foreground hover:bg-muted-foreground">
-            <Link className="flex-1" href={`/tag/${tag.id}`}>
-              {tag.name}
-            </Link>
-          </div>
-        ))} */}
         <TagTree tags={convertTagListToTagTree(tagList)} />
       </div>
     </div>

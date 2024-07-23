@@ -76,7 +76,7 @@ const SharedTLinkForm = ({
         />
         <div className="flex justify-end">
           <Button type="submit" className="mt-4" disabled={isSubmitting}>
-            {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+            {isSubmitting ? <Loader2 className="mr-2 size-4 animate-spin" /> : null}
             {submitText}
           </Button>
         </div>

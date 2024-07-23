@@ -111,3 +111,10 @@ export const getLinkListWithoutTag = async (): Promise<Link[]> => {
   })
   return linkList.map((link) => ({ ...link, tags: [] }))
 }
+/** 删除 Link */
+export const deleteLink = async (id: number) => {
+  return Promise.all([
+    db.delete(linksTable).where(eq(linksTable.id, id)),
+    db.delete(linksToTagsTable).where(eq(linksToTagsTable.linkId, id)),
+  ])
+}
