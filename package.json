@@ -10,15 +10,16 @@
     "db:generate": "drizzle-kit generate",
     "db:seed:local": "cross-env DB_LOCAL_PATH=$(find .wrangler/state/v3/d1/miniflare-D1DatabaseObject -type f -name '*.sqlite' -print -quit) tsx ./db/seed.ts",
     "db:migrate:local": "wrangler d1 migrations apply link-hub --local",
-    "db:migrate:pre": "wrangler d1 migrations apply --env preview link-hub-pre",
+    "db:migrate:preview": "wrangler d1 migrations apply --env preview link-hub-preview",
     "db:migrate:prod": "wrangler d1 migrations apply link-hub --remote",
     "db:studio:local": "cross-env DB_LOCAL_PATH=$(find .wrangler/state/v3/d1/miniflare-D1DatabaseObject -type f -name '*.sqlite' -print -quit) drizzle-kit studio",
-    "db:studio:pre": "cross-env NODE_ENV='pre' drizzle-kit studio",
+    "db:studio:preview": "cross-env NODE_ENV='preview' drizzle-kit studio",
     "db:studio:prod": "drizzle-kit studio",
     "pages:build": "pnpm next-on-pages",
     "dev": "next dev",
     "build": "next build",
     "pages:dev": "pnpm pages:build && pnpm wrangler pages dev",
+    "pages:deploy:preview": "pnpm pages:build && pnpm wrangler pages deploy --branch preview",
     "pages:deploy": "pnpm pages:build && pnpm wrangler pages deploy"
   },
   "lint-staged": {
