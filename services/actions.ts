@@ -103,6 +103,7 @@ export const getLinkListWithoutTag = async (): Promise<Link[]> => {
       linkId: true,
     },
   })
+  if (!linkIds.length) return getLinkList()
   const linkList = await db.query.linksTable.findMany({
     where: notInArray(
       linksTable.id,
