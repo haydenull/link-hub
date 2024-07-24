@@ -1,4 +1,4 @@
-import { relations } from 'drizzle-orm'
+import { relations, sql } from 'drizzle-orm'
 import { integer, primaryKey, sqliteTable, text } from 'drizzle-orm/sqlite-core'
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
 import { z } from 'zod'
@@ -28,6 +28,12 @@ export const linksTable = sqliteTable('links', {
   name: text('name'),
   remark: text('remark').notNull(),
   url: text('url').notNull(),
+  createdAt: text('created_at')
+    .notNull()
+    .default(sql`(CURRENT_TIMESTAMP)`),
+  updatedAt: text('updated_at')
+    .notNull()
+    .default(sql`(CURRENT_TIMESTAMP)`),
 })
 export const linksRelations = relations(linksTable, ({ many }) => ({
   linksToTags: many(linksToTagsTable),
