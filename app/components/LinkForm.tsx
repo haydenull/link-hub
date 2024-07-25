@@ -6,6 +6,8 @@ import { Loader2 } from 'lucide-react'
 import { useForm, type UseFormReturn } from 'react-hook-form'
 import { z } from 'zod'
 
+import { MultiSelect } from '@/components/MultiSelect'
+import TagSelect from '@/components/TagSelect'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
@@ -18,6 +20,7 @@ const formSchema = createLinkSchema.merge(
   z.object({
     remark: z.string().min(1),
     url: z.string().url(),
+    tags: z.array(z.number()).optional(),
   }),
 )
 
@@ -74,6 +77,17 @@ const SharedTLinkForm = ({
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="tags"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Tag</FormLabel>
+              <TagSelect {...field} value={field.value ?? []} />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <div className="flex justify-end">
           <Button type="submit" className="mt-4" disabled={isSubmitting}>
             {isSubmitting ? <Loader2 className="mr-2 size-4 animate-spin" /> : null}
@@ -92,6 +106,7 @@ export const CreateLinkForm = ({ onSuccess }: { onSuccess?: () => void }) => {
       name: '',
       url: '',
       remark: '',
+      tags: [],
     },
   })
   const queryClient = useQueryClient()
@@ -115,6 +130,7 @@ export const UpdateLinkForm = ({ linkData, onSuccess }: { linkData: Link; onSucc
       name: linkData.name || '',
       url: linkData.url,
       remark: linkData.remark,
+      tags: linkData.tags ? linkData.tags.map((tag) => tag.id) : [],
     },
   })
   const queryClient = useQueryClient()

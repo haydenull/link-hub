@@ -18,7 +18,6 @@ const Sidebar = () => {
   const { data: tagList } = useQuery(queries.tags.all)
 
   if (!tagList) return null
-  console.log('tagList', convertTagListToTagTree(tagList))
 
   return (
     <div className="w-[240px] overflow-auto border-r">

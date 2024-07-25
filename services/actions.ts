@@ -1,6 +1,6 @@
 'use server'
 
-import { eq, inArray, notInArray } from 'drizzle-orm'
+import { and, eq, inArray, notInArray } from 'drizzle-orm'
 
 import { db } from '@/db'
 import {
@@ -58,7 +58,7 @@ export const createLink = async (params: CreateLinkParams): Promise<Link> => {
       linkId,
       tagId,
     }))
-    await db.insert(linksToTagsTable).values(linksToTagsRows).returning()
+    await db.insert(linksToTagsTable).values(linksToTagsRows)
     tags = await db.select().from(tagsTable).where(inArray(tagsTable.id, params.tags))
   }
 
@@ -69,6 +69,32 @@ export const createLink = async (params: CreateLinkParams): Promise<Link> => {
 }
 /** 更新 Link */
 export const updateLink = async ({ id, data }: { id: number; data: CreateLinkParams }) => {
+  if (data.tags?.length) {
+    const currentTags = await db.query.linksToTagsTable.findMany({
+      where: eq(linksToTagsTable.linkId, id),
+      columns: {
+        tagId: true,
+      },
+    })
+    const currentTagIds = currentTags.map((linkToTag) => linkToTag.tagId)
+    const newTagIds = data.tags
+
+    const addTagIds = newTagIds.filter((tagId) => !currentTagIds.includes(tagId))
+    const deleteTagIds = currentTagIds.filter((tagId) => !newTagIds.includes(tagId))
+    if (addTagIds.length) {
+      const linksToTagsRows = addTagIds.map((tagId) => ({
+        linkId: id,
+        tagId,
+      }))
+      await db.insert(linksToTagsTable).values(linksToTagsRows)
+    }
+    if (deleteTagIds.length) {
+      await db
+        .delete(linksToTagsTable)
+        .where(and(eq(linksToTagsTable.linkId, id), inArray(linksToTagsTable.tagId, deleteTagIds)))
+    }
+  }
+
   const res = await db.update(linksTable).set(data).where(eq(linksTable.id, id)).returning()
   return res[0]
 }
@@ -114,7 +140,7 @@ export const getLinkListWithoutTag = async (): Promise<Link[]> => {
 }
 /** 删除 Link */
 export const deleteLink = async (id: number) => {
-  return Promise.all([
+  return db.batch([
     db.delete(linksTable).where(eq(linksTable.id, id)),
     db.delete(linksToTagsTable).where(eq(linksToTagsTable.linkId, id)),
   ])
