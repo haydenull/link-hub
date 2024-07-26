@@ -1,6 +1,6 @@
 'use server'
 
-import { and, eq, inArray, notInArray } from 'drizzle-orm'
+import { and, eq, inArray, like, notInArray, or } from 'drizzle-orm'
 
 import { db } from '@/db'
 import {
@@ -30,6 +30,14 @@ export const createTag = async (params: CreateTagParams) => {
 export const updateTag = async ({ id, data }: { id: number; data: CreateTagParams }) => {
   const res = await db.update(tagsTable).set(data).where(eq(tagsTable.id, id)).returning()
   return res[0]
+}
+/** 依据关键字查询 tag */
+export const getTagListByKeyword = async (keyword: string) => {
+  if (!keyword) return []
+  const res = await db.query.tagsTable.findMany({
+    where: like(tagsTable.name, `%${keyword}%`),
+  })
+  return res
 }
 
 // MARK: Link
@@ -144,4 +152,23 @@ export const deleteLink = async (id: number) => {
     db.delete(linksTable).where(eq(linksTable.id, id)),
     db.delete(linksToTagsTable).where(eq(linksToTagsTable.linkId, id)),
   ])
+}
+/** 依据关键字查询 link */
+export const getLinkListByKeyword = async (keyword: string): Promise<Link[]> => {
+  if (!keyword) return []
+  const linkList = await db.query.linksTable.findMany({
+    where: or(
+      like(linksTable.name, `%${keyword}%`),
+      like(linksTable.url, `%${keyword}%`),
+      like(linksTable.remark, `%${keyword}%`),
+    ),
+    with: {
+      linksToTags: {
+        with: {
+          tag: true,
+        },
+      },
+    },
+  })
+  return linkList.map(({ linksToTags, ...link }) => ({ ...link, tags: linksToTags.map((linkToTag) => linkToTag.tag) }))
 }

@@ -1,6 +1,13 @@
 import { createQueryKeyStore } from '@lukemorales/query-key-factory'
 
-import { getLinkList, getLinkListByTagId, getLinkListWithoutTag, getTagList } from './actions'
+import {
+  getLinkList,
+  getLinkListByKeyword,
+  getLinkListByTagId,
+  getLinkListWithoutTag,
+  getTagList,
+  getTagListByKeyword,
+} from './actions'
 
 export const queries = createQueryKeyStore({
   links: {
@@ -16,11 +23,19 @@ export const queries = createQueryKeyStore({
       queryKey: [tagId],
       queryFn: () => getLinkListByTagId(tagId),
     }),
+    byKeyword: (keyword: string) => ({
+      queryKey: [keyword],
+      queryFn: () => getLinkListByKeyword(keyword),
+    }),
   },
   tags: {
     all: {
       queryKey: null,
       queryFn: () => getTagList(),
     },
+    byKeyword: (keyword: string) => ({
+      queryKey: [keyword],
+      queryFn: () => getTagListByKeyword(keyword),
+    }),
   },
 })
