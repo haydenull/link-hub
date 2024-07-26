@@ -28,8 +28,8 @@ const LinkCard = ({ data }: { data: TypeLink }) => {
   return (
     <div className="group/link-card relative flex h-[140px] flex-col gap-2 rounded-lg border bg-background p-3">
       <a key={url} className="h-full w-full flex-1" href={url} target="_blank">
-        <h2 className="mb-2 line-clamp-1 text-lg font-medium">{name ?? url}</h2>
-        <p className="line-clamp-2 text-zinc-500">{remark}</p>
+        <h2 className="mb-2 line-clamp-1 font-medium">{name ?? url}</h2>
+        <p className="line-clamp-2 text-sm text-muted-foreground">{remark}</p>
       </a>
       <div className="flex gap-1">
         {tags.map((tag) => (

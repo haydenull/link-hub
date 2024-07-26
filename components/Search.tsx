@@ -2,12 +2,10 @@
 
 import { useDebouncedState } from '@react-hookz/web'
 import { useQuery } from '@tanstack/react-query'
-import { Calculator, Calendar, CreditCard, Loader2, Settings, Smile, User } from 'lucide-react'
-import Link from 'next/link'
+import { Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
-import LinkCard from '@/app/components/LinkCard'
 import {
   CommandDialog,
   CommandEmpty,
@@ -16,7 +14,6 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
-  CommandShortcut,
 } from '@/components/ui/command'
 import { queries } from '@/services/queries'
 
