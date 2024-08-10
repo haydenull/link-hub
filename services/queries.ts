@@ -5,6 +5,7 @@ import {
   getLinkListByKeyword,
   getLinkListByTagId,
   getLinkListWithoutTag,
+  getTagById,
   getTagList,
   getTagListByKeyword,
 } from './actions'
@@ -36,6 +37,10 @@ export const queries = createQueryKeyStore({
     byKeyword: (keyword: string) => ({
       queryKey: [keyword],
       queryFn: () => getTagListByKeyword(keyword),
+    }),
+    byId: (id: number) => ({
+      queryKey: [id],
+      queryFn: () => getTagById(id),
     }),
   },
 })

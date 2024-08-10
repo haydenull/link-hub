@@ -39,6 +39,13 @@ export const getTagListByKeyword = async (keyword: string) => {
   })
   return res
 }
+/** 依据 ID 查询 tag */
+export const getTagById = async (id: number) => {
+  const res = await db.query.tagsTable.findFirst({
+    where: eq(tagsTable.id, id),
+  })
+  return res
+}
 
 // MARK: Link
 /**

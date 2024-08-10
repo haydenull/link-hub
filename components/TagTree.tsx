@@ -29,21 +29,20 @@ const TagTree: React.FC<TagTreeProps> = ({ tags }) => {
 
   const renderTree = (nodes: TreeTag[] = []) => {
     return (
-      <ul className="pl-1">
+      <ul className="pl-6">
         {nodes.map((node) => {
           const hasChildren = node.children && node.children.length > 0
 
           return (
             <li key={node.fullPath}>
-              <div className="group/tag-item flex items-center justify-between rounded-md py-1 text-foreground hover:bg-muted">
-                <div className="flex flex-1">
+              <div className="group/tag-item flex items-center justify-between rounded-md px-2 py-1 text-foreground hover:bg-muted">
+                <div className="flex flex-1" onClick={() => toggleExpand(node.fullPath)}>
                   {hasChildren ? (
-                    <button onClick={() => toggleExpand(node.fullPath)} className="mr-1 focus:outline-none">
+                    <button className="mr-1 focus:outline-none">
                       {expanded[node.fullPath] ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
                     </button>
-                  ) : (
-                    <span className="mr-1 h-4 w-4"></span>
-                  )}
+                  ) : // <span className="mr-1 h-4 w-4"></span>
+                  null}
                   <Link href={`/tag/${node.id}`} className="flex-1">
                     <span>{node.name}</span>
                     {/* {node.id >= 0 && <span className="ml-2 text-sm text-gray-500">(ID: {node.id})</span>} */}
