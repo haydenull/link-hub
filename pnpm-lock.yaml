@@ -74,6 +74,9 @@ importers:
       react-hook-form:
         specifier: ^7.52.1
         version: 7.52.1(react@18.3.1)
+      react-layout-masonry:
+        specifier: ^1.1.0
+        version: 1.1.0(react@18.3.1)
       tailwind-merge:
         specifier: ^2.3.0
         version: 2.3.0
@@ -3975,6 +3978,11 @@ packages:
 
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
+
+  react-layout-masonry@1.1.0:
+    resolution: {integrity: sha512-EVDj8ICCKiZIYAfdZZyuIHzYTTXcwWdLr9B6IB+vKBa39tpIjoTIhpgcLsxurrYy3+le6JXTsQIduS2/8MpmFQ==}
+    peerDependencies:
+      react: ^18.0.0
 
   react-remove-scroll-bar@2.3.6:
     resolution: {integrity: sha512-DtSYaao4mBmX+HDo5YWYdBWQwYIQQshUV/dVxFxK+KM26Wjwp1gZ6rv6OC3oujI6Bfu6Xyg3TwK533AQutsn/g==}
@@ -8431,6 +8439,10 @@ snapshots:
       react: 18.3.1
 
   react-is@16.13.1: {}
+
+  react-layout-masonry@1.1.0(react@18.3.1):
+    dependencies:
+      react: 18.3.1
 
   react-remove-scroll-bar@2.3.6(@types/react@18.3.3)(react@18.3.1):
     dependencies:

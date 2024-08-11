@@ -8,6 +8,7 @@ import { useState } from 'react'
 import ConfirmDialog from '@/components/ConfirmDialog'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import type { Link as TypeLink } from '@/db/schema'
+import { cn } from '@/lib/utils'
 import { deleteLink } from '@/services/actions'
 import { queries } from '@/services/queries'
 
@@ -26,10 +27,10 @@ const LinkCard = ({ data }: { data: TypeLink }) => {
   const [open, setOpen] = useState(false)
   const { url, id, name, remark, tags } = data
   return (
-    <div className="group/link-card relative flex h-[140px] flex-col gap-2 rounded-lg border bg-background p-3">
-      <a key={url} className="h-full w-full flex-1" href={url} target="_blank">
-        <h2 className="mb-2 line-clamp-1 font-medium">{name ?? url}</h2>
-        <p className="line-clamp-2 text-sm text-muted-foreground">{remark}</p>
+    <div className="group/link-card relative flex flex-col gap-2 rounded-lg border bg-background p-3">
+      <a key={url} className="w-full" href={url} target="_blank">
+        <h2 className={cn('mb-2 font-medium', name ? 'break-words' : 'break-all')}>{name || url}</h2>
+        <p className="text-sm text-muted-foreground">{remark}</p>
       </a>
       <div className="flex gap-1">
         {tags.map((tag) => (

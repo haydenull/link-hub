@@ -1,7 +1,5 @@
-'use client'
-
-import { useQuery } from '@tanstack/react-query'
 import { Shell } from 'lucide-react'
+import Masonry from 'react-layout-masonry'
 
 import type { Link } from '@/db/schema'
 import { getLinkList } from '@/services/actions'
@@ -19,8 +17,8 @@ export default function LinkList({ data }: { data: Link[] }) {
   }
 
   return (
-    <div className="m-5 grid grid-cols-[repeat(auto-fill,280px)] justify-center gap-5">
+    <Masonry columns={{ 640: 1, 768: 2, 1024: 3, 1280: 4 }} gap={16}>
       {data?.map((link) => <LinkCard key={link.id} data={link} />)}
-    </div>
+    </Masonry>
   )
 }

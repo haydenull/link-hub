@@ -11,12 +11,12 @@ export const runtime = 'edge'
 const TagDetail = ({ params }: { params: { tagId: string } }) => {
   const tagId = params.tagId
   const { data: tag } = useQuery(queries.tags.byId(Number(tagId)))
-  const { data } = useQuery(queries.links.byTagId(Number(tagId)))
+  const { data, isLoading } = useQuery(queries.links.byTagId(Number(tagId)))
 
   return (
     <div className="h-full px-5 py-2">
-      {tag ? <span className="text-sm text-muted-foreground">#{tag.name}</span> : null}
-      <LinkList data={data ?? []} />
+      {tag ? <div className="mb-5 text-sm text-muted-foreground">#{tag.name}</div> : null}
+      {isLoading ? null : <LinkList data={data ?? []} />}
     </div>
   )
 }
