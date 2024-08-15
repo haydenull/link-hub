@@ -12,7 +12,11 @@ export const runtime = 'edge'
 const Inbox = () => {
   const { data } = useQuery(queries.links.noTag)
   if (!data) return null
-  return <LinkList data={data} />
+  return (
+    <div className="h-full px-5 py-2">
+      <LinkList data={data} />
+    </div>
+  )
 }
 
 export default Inbox
